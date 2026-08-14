@@ -9,7 +9,7 @@ export default function App() {
   const [submitted, setSubmitted] = useState('maya.makes.magic')
   const [error, setError] = useState('')
   const [profile, setProfile] = useState<Profile>(() => getDemoProfile())
-  useEffect(() => { let cancelled = false; const source = getDemoProfile(); Promise.all(source.posts.map(async (post) => ({ ...post, dominantColor: await extractImageColor(post.imageUrl) }))).then((posts) => { if (!cancelled) setProfile({ ...source, handle: submitted, posts }) }); return () => { cancelled = true } }, [submitted])
+  useEffect(() => { let cancelled = false; const source = getDemoProfile(); Promise.all(source.posts.map(async (post) => ({ ...post, dominantColor: (await extractImageColor(post.imageUrl)) || post.dominantColor }))).then((posts) => { if (!cancelled) setProfile({ ...source, handle: submitted, posts }) }); return () => { cancelled = true } }, [submitted])
   const result = useMemo(() => matchProfile(normalizeProfile(profile)), [profile])
 
   function submit(event: React.FormEvent) {
